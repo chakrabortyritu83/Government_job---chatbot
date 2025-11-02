@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Government Job Chatbot for your help</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e0e7ff, #f0f2f5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .chat-container {
+    background: #fff;
+    width: 400px;
+    height: 580px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .chat-header {
+    background: #e546c3;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .chat-box {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .bot, .user {
+    margin: 8px 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    max-width: 80%;
+    word-wrap: break-word;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease-in;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(5px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+  .bot {
+    background: #e0e7ff;
+    align-self: flex-start;
+  }
+  .user {
+    background: #dbf9c7;
+    align-self: flex-end;
+  }
+  .chat-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+  }
+  input {
+    border: none;
+    padding: 12px;
+    flex: 1;
+    outline: none;
+    font-size: 16px;
+  }
+  button {
+    background: #46bbe5;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background: #3894ca;
+  }
+  a {
+    color: #a91dd8;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">🇮🇳 Government Job Chatbot</div>
+    <div id="chat-box" class="chat-box"></div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Ask me anything about govt jobs...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+<script>
+const chatBox = document.getElementById('chat-box');
+const userInput = document.getElementById('user-input');
+
+// Job info data
+const jobData = {
+  bank: `🏦 <b>Bank Jobs:</b> SBI Clerk, RBI Assistant, IBPS PO.<br>
+         Eligibility: Graduate.<br>Age: 20–30 years.<br>
+         🔗 <a href="https://ibps.in/" target="_blank">Official IBPS Website</a>`,
+  railway: `🚆 <b>Railway Jobs:</b> RRB NTPC, Group D.<br>
+            Eligibility: 10th/12th/Graduate.<br>Age: 18–33 years.<br>
+            🔗 <a href="https://indianrailways.gov.in/" target="_blank">Indian Railways Official Site</a>`,
+  defence: `🪖 <b>Defence Jobs:</b> Army, Navy, Air Force.<br>
+            Eligibility: 10+2/Graduate.<br>Age: 17–25 years.<br>
+            🔗 <a href="https://joinindianarmy.nic.in/" target="_blank">Join Indian Army</a>`,
+  upsc: `📚 <b>UPSC Exams:</b> IAS, IPS, IFS.<br>
+         Eligibility: Graduate.<br>Age: 21–32 years.<br>
+         🔗 <a href="https://upsc.gov.in/" target="_blank">UPSC Official Website</a>`,
+  ssc: `🏢 <b>SSC Exams:</b> CHSL, CGL, MTS.<br>
+        Eligibility: 12th/Graduate.<br>Age: 18–30 years.<br>
+        🔗 <a href="https://ssc.gov.in/" target="_blank">SSC Official Website</a>`
+};
+
+// Upcoming exams
+const upcomingExams = [
+  "📅 SSC CHSL 2025 – Notification: February 2025",
+  "📅 RRB NTPC 2025 – Applications: March 2025",
+  "📅 SBI Clerk 2025 – Notification: April 2025",
+  "📅 UPSC Prelims 2025 – Exam: 25 May 2025",
+  "📅 NDA 2025 – Exam: 20 April 2025"
+];
+
+// Add messages
+function addMessage(text, sender) {
+  const msg = document.createElement('div');
+  msg.classList.add(sender);
+  msg.innerHTML = text;
+  chatBox.appendChild(msg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Bot reply
+function botReply(input) {
+  const msg = input.toLowerCase();
+
+  if (msg.includes('bank')) {
+    replyWithDelay("Sure! Here's what I found about <b>Bank Jobs</b> 👇", jobData.bank);
+  } else if (msg.includes('railway')) {
+    replyWithDelay("Got it! Here's info about <b>Railway Jobs</b> 🚆", jobData.railway);
+  } else if (msg.includes('defence')) {
+    replyWithDelay("Here are details on <b>Defence Jobs</b> 🪖", jobData.defence);
+  } else if (msg.includes('upsc')) {
+    replyWithDelay("Sure! Here's the latest about <b>UPSC Exams</b> 📚", jobData.upsc);
+  } else if (msg.includes('ssc')) {
+    replyWithDelay("Here’s info about <b>SSC Exams</b> 🏢", jobData.ssc);
+  } else if (msg.includes('exam') || msg.includes('upcoming')) {
+    replyWithDelay("📢 Here are some <b>Upcoming Government Exams</b> 👇", upcomingExams.join("<br>"));
+  } else if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
+    addMessage("👋 Hello there! I’m your friendly GovJobBot. You can ask about any government job — like Bank, Railway, UPSC, Defence, SSC — or say 'upcoming exams'.", 'bot');
+  } else if (msg.includes('thanks') || msg.includes('thank you')) {
+    addMessage("😊 You're most welcome! I'm always here to help you with job updates.", 'bot');
+  } else {
+    addMessage("🤔 Hmm, I’m not sure about that. Try asking like:<br>👉 ‘Tell me about UPSC jobs’<br>👉 ‘Upcoming exams in 2025’<br>👉 ‘Railway eligibility’", 'bot');
+  }
+}
+
+// Make replies more natural
+function replyWithDelay(intro, content) {
+  addMessage("⏳ Let me check that for you...", 'bot');
+  setTimeout(() => {
+    addMessage(intro, 'bot');
+    addMessage(content, 'bot');
+  }, 1000);
+}
+
+// Send user message
+function sendMessage() {
+  const text = userInput.value.trim();
+  if (text === '') return;
+  addMessage(text, 'user');
+  userInput.value = '';
+  setTimeout(() => botReply(text), 400);
+}
+
+// Enter key support
+userInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendMessage();
+});
+
+// Welcome message
+addMessage("👋 Hello! I'm <b>Govt_Job_Bot</b> — your AI guide for Indian government jobs.<br>Ask me about any category (Bank, SSC, UPSC, Defence, etc.) or type 'upcoming exams'.", 'bot');
+</script>
+</body>
+</html>
